@@ -1,0 +1,48 @@
+specVersion: 0.0.2
+description: Nexon Army NFT Subgraph
+repository: https://github.com/nexon-finance/nexon-army-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: NexonArmyNFT
+    network: {{network}}
+    source:
+      address: '{{NexonArmyNFTAddress}}'
+      abi: NexonArmyNFT
+      startBlock: {{NexonArmyStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - NFT
+      abis:
+        - name: NexonArmyNFT
+          file: ./abis/NexonArmyNFT.json
+      eventHandlers:
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+  - kind: ethereum/contract
+    name: NexonDonation
+    network: {{network}}
+    source:
+      address: '{{NexonDonationAddress}}'
+      abi: NexonDonation
+      startBlock: {{NexonDonationStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - NFT
+      abis:
+        - name: NexonDonation
+          file: ./abis/NexonDonation.json
+        - name: NexonArmyNFT
+          file: ./abis/NexonArmyNFT.json
+      eventHandlers:
+        - event: Donation(address,uint256,uint256[],uint256[],uint256[])
+          handler: handleNewDonation

@@ -1,0 +1,19 @@
+type NFT @entity {
+  id: ID!
+  rank: BigInt!
+  owner: Owner!
+}
+
+type Owner @entity {
+  id: ID!
+  address: Bytes!
+  votingWeight: BigInt!
+  nft: [NFT!] @derivedFrom(field: "owner")
+}
+
+type VotingWeight @entity {
+  id: ID!
+  address: Bytes!
+  weight: BigInt!
+  block: BigInt!
+}

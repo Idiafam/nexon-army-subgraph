@@ -1,0 +1,22 @@
+{
+  "name": "nexon-army-nft-subgraph",
+  "version": "0.1.0",
+  "scripts": {
+    "create": "graph create nexon-finance/nexon-army-nft-matic --node https://api.thegraph.com/deploy/",
+    "prepare": "mustache ./config/${NETWORK:-matic}.json ${BLOCKCHAIN:-matic}.subgraph.template.yaml > subgraph.yaml && npm run subgraph:codegen",
+    "subgraph:codegen": "graph codegen --output-dir ./generated",
+    "subgraph:build": "graph build",
+    "subgraph:deploy": "graph deploy $SLUG --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $ACCESS_TOKEN",
+    "deploy": "BLOCKCHAIN=matic NETWORK=matic env-cmd npm run prepare && SLUG=nexon-finance/nexon-army-nft npm run subgraph:deploy"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.19.0",
+    "@graphprotocol/graph-ts": "^0.19.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "env-cmd": "^10.1.0",
+    "mustache": "^4.2.0"
+  }
+}
